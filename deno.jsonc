@@ -1,6 +1,7 @@
 {
     "name": "@nahara/color",
     "version": "1.0.0",
+    "license": "MIT",
     "publish": {
         "exclude": [
             ".github/",
