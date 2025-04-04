@@ -1,0 +1,16 @@
+{
+    "name": "@nahara/color",
+    "version": "1.0.0",
+    "publish": {
+        "exclude": [
+            ".github/",
+            ".vscode/",
+            "example/",
+            "icc/" // <= Incomplete
+        ]
+    },
+    "exports": {
+        ".": "./mod.ts",
+        "./rgb": "./rgb.ts"
+    }
+}
