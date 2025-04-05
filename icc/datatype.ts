@@ -1,5 +1,14 @@
 /**
- * Module for reading or writing various ICC data types on `Uint8Array` buffer.
+ * Module for reading or writing various ICC data types on `Uint8Array` buffer. All value types are in big endian.
+ * 
+ * ```ts
+ * import { datatype } from "jsr:@nahara/color/unstable/icc";
+ * 
+ * const buffer = new Uint8Array(128);
+ * datatype.setUint16(buffer, 256);
+ * new Uint16Array(buffer)[0]; // => 1
+ * ```
+ * 
  * @module
  */
 

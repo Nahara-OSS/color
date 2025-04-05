@@ -1,15 +1,31 @@
+/**
+ * Math module for working with colors, mostly consists of linear algebra.
+ * @module
+ */
+
+/**
+ * A 3x3 matrix, mainly used for transforming color from one space to another.
+ */
 export interface Matrix3x3 {
     m00: number; m01: number; m02: number;
     m10: number; m11: number; m12: number;
     m20: number; m21: number; m22: number;
 }
 
+/**
+ * A vector with 3 components.
+ */
 export interface Vector3 {
     x: number;
     y: number;
     z: number;
 }
 
+/**
+ * Inverse a 3x3 matrix.
+ * @param param0 The original matrix.
+ * @returns The inverse of given matrix.
+ */
 export function invertMat({ m00, m01, m02, m10, m11, m12, m20, m21, m22 }: Matrix3x3): Matrix3x3 {
     const det =
         m00 * (m11 * m22 - m21 * m12) -
@@ -29,6 +45,14 @@ export function invertMat({ m00, m01, m02, m10, m11, m12, m20, m21, m22 }: Matri
     };
 }
 
+/**
+ * Transform vector by multiplying matrix with vector (matrix before vector/`M * v`).
+ * @param param0 The matrix.
+ * @param x X component of vector.
+ * @param y Y component of vector.
+ * @param z Z component of vector.
+ * @returns Transformed vector.
+ */
 export function matMulMV({ m00, m01, m02, m10, m11, m12, m20, m21, m22 }: Matrix3x3, x: number, y: number, z: number): Vector3 {
     return {
         x: m00 * x + m01 * y + m02 * z,
@@ -37,6 +61,11 @@ export function matMulMV({ m00, m01, m02, m10, m11, m12, m20, m21, m22 }: Matrix
     };
 }
 
+/**
+ * Clamp value to `[0.00; 1.00]`.
+ * @param x The value.
+ * @returns The clamped value.
+ */
 export function clamp01(x: number): number {
     if (x < 0) x = 0;
     if (x > 1) x = 1;

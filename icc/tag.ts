@@ -2,6 +2,10 @@ import type { Chromaticity } from "../rgb.ts";
 import * as datatype from "./datatype.ts";
 import type { Xyz } from "./types.ts";
 
+/**
+ * Tag information, including tag signature, offset in ICC profile data and the size of tag data. If the tag data type
+ * is recognizable, the optional `data` field will be populated.
+ */
 export interface Tag {
     signature: string;
     offset: number;
@@ -9,7 +13,13 @@ export interface Tag {
     data?: TagData;
 }
 
+/**
+ * A table of tags in ICC profile.
+ */
 export interface IccTagTable {
+    /**
+     * Media white point.
+     */
     wtpt?: Tag & { data: XyzTagData };
     rXYZ?: Tag & { data: XyzTagData };
     gXYZ?: Tag & { data: XyzTagData };
@@ -17,6 +27,7 @@ export interface IccTagTable {
     rTRC?: Tag & { data: CurveTagData };
     gTRC?: Tag & { data: CurveTagData };
     bTRC?: Tag & { data: CurveTagData };
+    chrm?: Tag & { data: ChromaticityTagData };
 
     [x: string]: Tag | undefined;
 }
@@ -72,6 +83,9 @@ export type TagDataFromType<K extends string, T extends TagData = TagData> = T e
 export type TagDataParser<T extends TagData> = (buffer: Uint8Array, offset: number, size: number) => T;
 export type TagDataParsers = { [x in TagData["type"]]: TagDataParser<TagDataFromType<x>>; }
 
+/**
+ * A map of tag parsers, with key corresponding to type signature and value is a function that parses tag data.
+ */
 export const tagDataParsers: TagDataParsers = {
     "XYZ "(buffer, offset, size) {
         const values: Xyz[] = [];

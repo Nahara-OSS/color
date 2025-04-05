@@ -22,9 +22,20 @@ import { apply, applyInverse, type Curve } from "./curve.ts";
 import { clamp01, invertMat, matMulMV, type Matrix3x3 } from "./math.ts";
 import type { IColorProfile, XyzColor } from "./profile.ts";
 
+/**
+ * A color with 3 components: red, green and blue.
+ */
 export interface RgbColor { r: number; g: number; b: number; }
+
+/**
+ * The chromaticity coordinates. The Z coordinate can be derived by subtracting 1 with x and y (`1 - x - y`). If the
+ * white point is represented as chromaticity, its nCIEXYZ can be derived by dividing all components with `y` value.
+ */
 export interface Chromaticity { x: number; y: number; }
 
+/**
+ * Information about RGB color profile.
+ */
 export interface RgbProfileInfo {
     /**
      * The red, green and blue primaries of this RGB color profile, including chromaticity and transfer function to
@@ -39,6 +50,9 @@ export interface RgbProfileInfo {
     whitePoint: WhitePoint;
 }
 
+/**
+ * The primaries of red, green and blue. Each corresponding to chromaticity coordinates and its transfer function (TRC).
+ */
 export interface RgbPrimaries {
     r: RgbPrimary;
     g: RgbPrimary;
@@ -59,7 +73,8 @@ export interface RgbPrimary {
 
 export interface WhitePoint {
     /**
-     * The chromaticity of reference white point.
+     * The chromaticity of reference white point. Chromaticity can be used to derive nCIEXYZ. You can also combine with
+     * luminance of white point to derive CIEXYZ by multiplying nCIEXYZ with luminance.
      */
     chromaticity: Chromaticity;
 
@@ -69,6 +84,9 @@ export interface WhitePoint {
     luminance: number;
 }
 
+/**
+ * RGB/XYZ conversion matrices. These matrices can be ported over to WebGPU/WebGL shader for faster processing.
+ */
 export interface RgbMatrices {
     /**
      * Matrix to convert from linear RGB or XYZ.
@@ -143,6 +161,9 @@ export function calcConversionInfo(r: Chromaticity, g: Chromaticity, b: Chromati
     };
 }
 
+/**
+ * The RGB profile instance. This handles the conversion from RGB to CIEXYZ/nCIEXYZ and vice versa.
+ */
 export class RgbProfile implements IColorProfile<RgbProfileInfo, RgbColor> {
     readonly colorSpace: string = "rgb";
     readonly conversion: RgbConversionInfo;

@@ -9,6 +9,12 @@ export interface IccProfileInfo {
     tags: IccTagTable;
 }
 
+/**
+ * Parse ICC profile info from binary data. The data is the entire content of ICC profile file (`.icc`).
+ * @param buffer The buffer containing ICC profile data in binary.
+ * @param start The start offset of ICC profile data in buffer.
+ * @returns Parsed ICC profile info.
+ */
 export function parseIcc(buffer: Uint8Array, start: number = 0): IccProfileInfo {
     return {
         header: getHeader(buffer, start),
@@ -16,6 +22,11 @@ export function parseIcc(buffer: Uint8Array, start: number = 0): IccProfileInfo 
     };
 }
 
+/**
+ * Instantiate ICC profile for color conversion.
+ * @param icc The ICC profile info.
+ * @returns The ICC profile for color conversion.
+ */
 export function profileOf(icc: IccProfileInfo): IColorProfile<IccProfileInfo, number[]> {
     switch (icc.header.profileSpace) {
         case ColorSpace.RGB: return new IccRgbProfile(icc);

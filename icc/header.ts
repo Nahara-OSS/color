@@ -25,6 +25,12 @@ export interface IccHeader {
     profileId?: string;
 }
 
+/**
+ * Parse ICC profile header.
+ * @param buffer Buffer containing ICC profile header.
+ * @param offset The offset of header in buffer.
+ * @returns The header data.
+ */
 export function getHeader(buffer: Uint8Array, offset: number = 0): IccHeader {
     const profileSize = datatype.getUint32(buffer, offset + 0);
     const preferredCmmType = datatype.getSignature(buffer, offset + 4);
