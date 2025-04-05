@@ -6,12 +6,12 @@
         "exclude": [
             ".github/",
             ".vscode/",
-            "example/",
-            "icc/" // <= Incomplete
+            "example/"
         ]
     },
     "exports": {
         ".": "./mod.ts",
-        "./rgb": "./rgb.ts"
+        "./rgb": "./rgb.ts",
+        "./unstable/icc": "./icc/mod.ts"
     }
 }
