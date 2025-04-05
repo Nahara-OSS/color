@@ -128,9 +128,9 @@ export interface RgbConversionInfo {
  */
 export function calcConversionInfo(r: Chromaticity, g: Chromaticity, b: Chromaticity, w: WhitePoint): RgbConversionInfo {
     const sdrWhitePoint: XyzColor = {
-        x: w.chromaticity.x,
-        y: w.chromaticity.y,
-        z: 1 - w.chromaticity.x - w.chromaticity.y,
+        x: w.chromaticity.x / w.chromaticity.y,
+        y: 1,
+        z: (1 - w.chromaticity.x - w.chromaticity.y) / w.chromaticity.y,
     };
     const hdrWhitePoint: XyzColor = {
         x: sdrWhitePoint.x * w.luminance,
@@ -157,9 +157,9 @@ export class RgbProfile implements IColorProfile<RgbProfileInfo, RgbColor> {
     }
 
     toXyz({ r, g, b }: RgbColor, hdr: boolean = false): XyzColor {
-        r = applyInverse(this.serializable.primaries.r.trc, clamp01(r));
-        g = applyInverse(this.serializable.primaries.g.trc, clamp01(g));
-        b = applyInverse(this.serializable.primaries.b.trc, clamp01(b));
+        r = apply(this.serializable.primaries.r.trc, clamp01(r));
+        g = apply(this.serializable.primaries.g.trc, clamp01(g));
+        b = apply(this.serializable.primaries.b.trc, clamp01(b));
         const matrices = hdr ? this.conversion.hdr : this.conversion.sdr;
         return matMulMV(matrices.xyz, r, g, b);
     }
@@ -167,9 +167,9 @@ export class RgbProfile implements IColorProfile<RgbProfileInfo, RgbColor> {
     fromXyz({ x, y, z }: XyzColor, hdr: boolean = false): RgbColor {
         const matrices = hdr ? this.conversion.hdr : this.conversion.sdr;
         let { x: r, y: g, z: b } = matMulMV(matrices.rgb, x, y, z);
-        r = apply(this.serializable.primaries.r.trc, clamp01(r));
-        g = apply(this.serializable.primaries.g.trc, clamp01(g));
-        b = apply(this.serializable.primaries.b.trc, clamp01(b));
+        r = applyInverse(this.serializable.primaries.r.trc, clamp01(r));
+        g = applyInverse(this.serializable.primaries.g.trc, clamp01(g));
+        b = applyInverse(this.serializable.primaries.b.trc, clamp01(b));
         return { r, g, b };
     }
 
